@@ -31,8 +31,48 @@ def _process_c4_text(sample: dict[str, Any]) -> str:
     return sample["text"]
 
 
+def _load_bantaywika_dataset(dataset_path: str, split: str):
+    """Load BantayWika Philippine language pretraining corpus."""
+    return load_dataset(dataset_path, split=split, streaming=True)
+
+
+def _process_bantaywika_text(sample: dict[str, Any]) -> str:
+    """Process BantayWika dataset sample text."""
+    return sample["text"]
+
+
+def _load_halohalo_dataset(dataset_path: str, split: str):
+    """Load halohalo combined Philippine language pretraining corpus."""
+    return load_dataset(dataset_path, split=split, streaming=True)
+
+
+def _process_halohalo_text(sample: dict[str, Any]) -> str:
+    """Process halohalo dataset sample text."""
+    return sample["text"]
+
+
 # Add your dataset here - more information at docs/datasets.md
 DATASETS = {
+    "bantaywika": DatasetConfig(
+        path="sapinsapin/BantayWika",
+        loader=partial(_load_bantaywika_dataset, split="train"),
+        sample_processor=_process_bantaywika_text,
+    ),
+    "bantaywika_validation": DatasetConfig(
+        path="sapinsapin/BantayWika",
+        loader=partial(_load_bantaywika_dataset, split="test"),
+        sample_processor=_process_bantaywika_text,
+    ),
+    "halohalo": DatasetConfig(
+        path="sapinsapin/halohalo",
+        loader=partial(_load_halohalo_dataset, split="train"),
+        sample_processor=_process_halohalo_text,
+    ),
+    "halohalo_validation": DatasetConfig(
+        path="sapinsapin/halohalo",
+        loader=partial(_load_halohalo_dataset, split="test"),
+        sample_processor=_process_halohalo_text,
+    ),
     "c4": DatasetConfig(
         path="allenai/c4",
         loader=partial(_load_c4_dataset, split="train"),
